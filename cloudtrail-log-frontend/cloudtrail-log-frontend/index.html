@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CloudTrail Organization Log Dashboard</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<aside class="sidebar">
+  <div class="brand">&#9729; CloudTrail Dashboard</div>
+  <nav>
+    <a href="#" data-page="dashboard" class="active">&#9632; Dashboard</a>
+    <a href="#" data-page="accounts">&#128101; AWS Accounts</a>
+    <a href="#" data-page="logs">&#128196; CloudTrail Logs</a>
+    <a href="#" data-page="reports">&#128202; Reports</a>
+    <a href="#" data-page="architecture">&#128736; Architecture</a>
+    <a href="#" data-page="api">&#128279; API Information</a>
+  </nav>
+</aside>
+
+<main>
+<header class="top">
+  <div><h1>CloudTrail Organization Log Dashboard</h1>
+  <p>Multi-Account AWS Log Aggregation Monitor</p></div>
+  <div class="top-actions">
+    <span id="modeBadge" class="badge demo">Demo Data</span>
+    <button id="btnTestApi">Test Log API</button>
+  </div>
+</header>
+<div id="message" class="message hidden"></div>
+
+<!-- DASHBOARD -->
+<section id="page-dashboard" class="page">
+  <div class="cards">
+    <div class="card"><h3>Organization Status</h3><div class="big"><span class="dot"></span>ONLINE</div><small>Application status</small></div>
+    <div class="card"><h3>Total AWS Accounts</h3><div class="big" id="statAccounts">-</div><small>Monitored Accounts</small></div>
+    <div class="card"><h3>Total CloudTrail Logs</h3><div class="big" id="statLogs">-</div><small>Aggregated Events</small></div>
+    <div class="card"><h3>Today's Events</h3><div class="big" id="statToday">-</div><small>Events Today</small></div>
+    <div class="card"><h3>Failed Events</h3><div class="big red" id="statFailed">-</div><small>Error / Failed Events</small></div>
+    <div class="card"><h3>Active Trail</h3><div class="big" id="statTrail">-</div><small>Organization Trail</small></div>
+    <div class="card"><h3>Last Event</h3><div class="big" id="statLast">-</div><small>Latest CloudTrail Event</small></div>
+  </div>
+
+  <div class="grid2">
+    <div class="panel"><h2>Organization Trail</h2>
+      <p>Status: <b id="trailStatus">-</b></p><p>Trail Name: <b>OrganizationTrail</b></p>
+      <p>Multi-Account Logging: <b>ENABLED</b></p><p>Last Log Received: <b id="trailLast">-</b></p>
+      <small class="note" id="trailNote"></small></div>
+    <div class="panel"><h2>Database</h2>
+      <p>Engine: <b>MySQL</b></p><p>Status: <b id="dbStatus">CONNECTED (via Spring Boot)</b></p>
+      <p>Host: <b>Backend Managed</b></p><p>Port: <b>3306</b></p><p>Database: <b>cloudtrail_db</b></p>
+      <small class="note">Credentials are never shown or stored in the frontend.</small></div>
+  </div>
+
+  <div class="panel"><h2>CloudTrail Log Statistics <span class="badge demo statBadge">Demo / Backend Data</span></h2>
+    <div class="grid2">
+      <div><h4>Logs by AWS Account</h4><div id="chartAccount"></div></div>
+      <div><h4>Logs by Event Type</h4><div id="chartEvent"></div></div>
+      <div><h4>Logs by Region</h4><div id="chartRegion"></div></div>
+      <div><h4>Successful vs Failed</h4><div id="chartStatus"></div></div>
+    </div>
+  </div>
+
+  <div class="panel"><h2>Recent CloudTrail Events</h2>
+    <div class="table-wrap"><table><thead><tr><th>Event ID</th><th>Account</th><th>Event</th><th>User</th><th>Time</th><th>Status</th></tr></thead>
+    <tbody id="recentBody"></tbody></table></div>
+  </div>
+</section>
+
+<!-- ACCOUNTS -->
+<section id="page-accounts" class="page hidden">
+  <div class="panel"><h2>AWS Organization Accounts</h2>
+    <div class="table-wrap"><table><thead><tr><th>Account ID</th><th>Account Name</th><th>Region</th><th>Status</th><th>Total Logs</th><th>Last Activity</th><th>Action</th></tr></thead>
+    <tbody id="accountsBody"></tbody></table></div>
+  </div>
+  <div class="panel hidden" id="accountLogsPanel">
+    <h2 id="accountLogsTitle"></h2>
+    <div class="cards small">
+      <div class="card"><h3>Total Logs</h3><div class="big" id="accTotal">-</div></div>
+      <div class="card"><h3>Today's Logs</h3><div class="big" id="accToday">-</div></div>
+      <div class="card"><h3>Failed Events</h3><div class="big red" id="accFailed">-</div></div>
+      <div class="card"><h3>Latest Activity</h3><div class="big" id="accLatest">-</div></div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>Log ID</th><th>Event Name</th><th>User</th><th>Region</th><th>Event Time</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody id="accountLogsBody"></tbody></table></div>
+  </div>
+</section>
+
+<!-- LOGS -->
+<section id="page-logs" class="page hidden">
+  <div class="panel"><h2>Aggregated CloudTrail Logs</h2>
+    <div class="filters">
+      <input id="fSearch" type="text" placeholder="Search logs...">
+      <select id="fAccount"><option value="">All Accounts</option></select>
+      <select id="fRegion"><option value="">All Regions</option></select>
+      <select id="fStatus"><option value="">All Status</option><option>SUCCESS</option><option>FAILED</option></select>
+      <select id="fEvent"><option value="">All Events</option></select>
+      <input id="fDate" type="date">
+      <button id="btnSearch">Search</button>
+      <button id="btnReset" class="secondary">Reset</button>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>Log ID</th><th>Account ID</th><th>Account Name</th><th>Event Name</th><th>Event Source</th><th>Username</th><th>Region</th><th>Source IP</th><th>Event Time</th><th>Status</th><th>Action</th></tr></thead>
+    <tbody id="logsBody"></tbody></table></div>
+    <div class="pager"><button id="prevPage" class="secondary">Previous</button><span id="pageInfo"></span><button id="nextPage" class="secondary">Next</button></div>
+  </div>
+</section>
+
+<!-- REPORTS -->
+<section id="page-reports" class="page hidden">
+  <div class="panel"><h2>CloudTrail Reports</h2>
+    <div class="filters">
+      <label>From <input id="rFrom" type="date"></label>
+      <label>To <input id="rTo" type="date"></label>
+      <select id="rAccount"><option value="">All Accounts</option></select>
+      <select id="rEvent"><option value="">All Event Types</option></select>
+      <select id="rStatus"><option value="">All Status</option><option>SUCCESS</option><option>FAILED</option></select>
+      <button id="btnReport">Generate Report</button>
+    </div>
+    <div class="cards small">
+      <div class="card"><h3>Total Events</h3><div class="big" id="rTotal">-</div></div>
+      <div class="card"><h3>Successful</h3><div class="big" id="rOk">-</div></div>
+      <div class="card"><h3>Failed</h3><div class="big red" id="rFail">-</div></div>
+    </div>
+    <div class="grid2">
+      <div><h4>Events per Account</h4><div id="rAcc"></div></div>
+      <div><h4>Events per Region</h4><div id="rReg"></div></div>
+      <div><h4>Events per Event Type</h4><div id="rEvt"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="page-architecture" class="page hidden">
+  <div class="panel"><h2>System Architecture</h2>
+    <div class="flow" id="flow">
+      <div class="box"><b>AWS Accounts</b><span>Multiple accounts in the same AWS Organization.</span></div><div class="arrow">&#8595;</div>
+      <div class="box"><b>CloudTrail</b><span>Records AWS API activity and account activity.</span></div><div class="arrow">&#8595;</div>
+      <div class="box"><b>Organization Trail</b><span>Collects activity across the whole AWS Organization.</span></div><div class="arrow">&#8595;</div>
+      <div class="box"><b>Centralized Storage</b><span>Stores the required log information.</span></div><div class="arrow">&#8595;</div>
+      <div class="box"><b>Spring Boot REST API</b><span>Provides REST APIs to the frontend.</span></div><div class="arrow">&#8595;</div>
+      <div class="box"><b>MySQL Database</b><span>Stores account and log information.</span></div><div class="arrow">&#8595;</div>
+      <div class="box"><b>Frontend Dashboard</b><span>Displays aggregated logs and statistics.</span></div>
+    </div>
+    <button id="btnDemo">Run Demo</button>
+    <div id="demoSteps" class="demo-steps"></div>
+    <p class="note">This is a visual demonstration only. The frontend does not collect CloudTrail logs and never connects to AWS or MySQL directly.</p>
+  </div>
+</section>
+
+<!-- API INFO -->
+<section id="page-api" class="page hidden">
+  <div class="panel"><h2>API Information</h2>
+    <p>The frontend calls these Spring Boot endpoints. Test the same URLs in Postman. Base URL is set in <code>script.js</code> (<code>API_BASE_URL</code>).</p>
+    <pre>GET  /api/dashboard/stats
+GET  /api/accounts
+GET  /api/accounts/{id}
+GET  /api/logs
+GET  /api/logs/{id}
+GET  /api/logs/recent
+GET  /api/logs/account/{accountId}
+GET  /api/logs/search?keyword={keyword}
+GET  /api/logs/test
+GET  /api/reports/summary</pre>
+  </div>
+</section>
+</main>
+
+<div id="modal" class="modal hidden"><div class="modal-box">
+  <h2>Log Details</h2><div id="modalBody"></div>
+  <button id="closeModal">Close</button>
+</div></div>
+
+<script src="script.js"></script>
+</body>
+</html>

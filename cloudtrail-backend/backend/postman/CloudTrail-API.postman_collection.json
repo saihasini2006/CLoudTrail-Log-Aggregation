@@ -1,0 +1,509 @@
+{
+  "info": {
+    "name": "CloudTrail Log Aggregation API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "item": [
+    {
+      "name": "Test Log API",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/logs/test",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "logs",
+            "test"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard stats",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/dashboard/stats",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "dashboard",
+            "stats"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard account summary",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/dashboard/account-summary",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "dashboard",
+            "account-summary"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard event summary",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/dashboard/event-summary",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "dashboard",
+            "event-summary"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get all accounts",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/accounts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "accounts"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get account by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/accounts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "accounts",
+            "1"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Add account",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/accounts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "accounts"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"accountId\": \"100000000004\",\n  \"accountName\": \"Staging\",\n  \"region\": \"ap-south-1\",\n  \"status\": \"ACTIVE\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete account (change id)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/accounts/4",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "accounts",
+            "4"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 204\", function () { pm.response.to.have.status(204); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get all logs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/logs",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "logs"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get recent logs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/logs/recent",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "logs",
+            "recent"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get log by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/logs/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "logs",
+            "1"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get logs by account",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/logs/account/100000000001",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "logs",
+            "account",
+            "100000000001"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search logs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/logs/search?keyword=bucket",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "logs",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "keyword",
+              "value": "bucket"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Add log (simulate CloudTrail event)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/logs",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "logs"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"accountId\": \"100000000001\",\n  \"eventName\": \"CreateBucket\",\n  \"eventSource\": \"s3.amazonaws.com\",\n  \"username\": \"admin\",\n  \"userType\": \"IAMUser\",\n  \"region\": \"ap-south-1\",\n  \"sourceIp\": \"192.168.1.10\",\n  \"resourceName\": \"my-new-bucket\",\n  \"status\": \"SUCCESS\",\n  \"eventJson\": \"{\\\"eventName\\\":\\\"CreateBucket\\\",\\\"eventSource\\\":\\\"s3.amazonaws.com\\\"}\"\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 201\", function () { pm.response.to.have.status(201); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Report summary",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/reports/summary",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "reports",
+            "summary"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Report summary (filtered)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/reports/summary?accountId=100000000003&status=FAILED",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "reports",
+            "summary"
+          ],
+          "query": [
+            {
+              "key": "accountId",
+              "value": "100000000003"
+            },
+            {
+              "key": "status",
+              "value": "FAILED"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status is 200\", function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
